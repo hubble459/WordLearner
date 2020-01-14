@@ -18,6 +18,7 @@ public class WordLearner implements ActionListener {
     private JFrame f;
     private JLabel questionsMax;
     private JLabel multipleChoices;
+    private String regex = " - ";
     private int amountQuestions;
     private int multipleChoice = 4;
 
@@ -30,7 +31,25 @@ public class WordLearner implements ActionListener {
             System.exit(0);
         }
 
-        questions = readFile(filename);
+        // Menu Bar
+        JMenuBar mb = new JMenuBar();
+        JMenu m = new JMenu("Options");
+        JMenuItem mi1 = new JMenuItem("Change Regex");
+        mi1.addActionListener(this);
+        mi1.setActionCommand("regex");
+        JMenuItem mi2 = new JMenuItem("Change FontSize");
+        mi2.addActionListener(this);
+        mi2.setActionCommand("fontSize");
+        JMenuItem mi3 = new JMenuItem("Turn on Debug Mode");
+        mi3.addActionListener(this);
+        mi3.setActionCommand("debug");
+        m.add(mi1);
+        m.add(mi2);
+        m.add(mi3);
+        mb.add(m);
+        f.setJMenuBar(mb);
+
+        questions = readFile(filename, regex);
 
         // Options Panel
         JPanel options = new JPanel(new GridLayout(3,0));
@@ -47,17 +66,43 @@ public class WordLearner implements ActionListener {
         info.add(multipleChoices);
         options.add(info);
 
+        // Buttons
+        JPanel buttons = new JPanel();
+        buttons.setLayout(new GridLayout(3,0));
+        // Change File
+        JButton changeFile = new JButton("<html><font color=blue>Change File</font></html>");
+        changeFile.setActionCommand("changeT");
+        changeFile.addActionListener(this);
+        changeFile.setOpaque(false);
+        changeFile.setContentAreaFilled(false);
+        changeFile.setBorderPainted(false);
+        buttons.add(changeFile);
+
         // Change Question Amount
-        JButton setQuestions = new JButton("Change Question Amount");
+        JButton setQuestions = new JButton("<html><font color=blue>Change Question Amount</font></html>");
         setQuestions.setActionCommand("changeQ");
         setQuestions.addActionListener(this);
-        options.add(setQuestions);
+        setQuestions.setOpaque(false);
+        setQuestions.setContentAreaFilled(false);
+        setQuestions.setBorderPainted(false);
+        buttons.add(setQuestions);
 
         // Change Multiple Choice Amount
-        JButton setChoiceAmount = new JButton("Change Multiple Questions Amount");
+        JButton setChoiceAmount = new JButton("<html><font color=blue>Change Multiple Questions Amount</font></html>");
         setChoiceAmount.setActionCommand("changeC");
         setChoiceAmount.addActionListener(this);
-        options.add(setChoiceAmount);
+        setChoiceAmount.setOpaque(false);
+        setChoiceAmount.setContentAreaFilled(false);
+        setChoiceAmount.setBorderPainted(false);
+        buttons.add(setChoiceAmount);
+        options.add(buttons);
+
+        // Start Button
+        JButton start = new JButton("Start");
+        start.addActionListener(this);
+        start.setOpaque(false);
+        start.setBorderPainted(false);
+        options.add(start);
 
         // Add Panels
         f.add(options);
@@ -67,7 +112,7 @@ public class WordLearner implements ActionListener {
         f.setVisible(true);
     }
 
-    private String[][] readFile(String filename) {
+    private String[][] readFile(String filename, String regex) {
         ArrayList<String> lines = new ArrayList<>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
@@ -76,18 +121,20 @@ public class WordLearner implements ActionListener {
             e.printStackTrace();
         }
         boolean correct = true;
+        int line = -1;
         String[][] array = new String[lines.size()][2];
         for (int i = 0; i < lines.size(); i++) {
-            String[] split = lines.get(i).split(" - ");
+            String[] split = lines.get(i).split(regex);
             if (split.length != 2) {
                 correct = false;
+                line = i;
                 break;
             }
             array[i][0] = split[0];
             array[i][1] = split[1];
         }
         if (!correct) {
-            JOptionPane.showMessageDialog(f, "This file contains an error!");
+            JOptionPane.showMessageDialog(f, filename + " contains an error on line "+line+"!");
             System.exit(0);
         }
         return array;

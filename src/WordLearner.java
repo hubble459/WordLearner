@@ -16,6 +16,8 @@ public class WordLearner implements ActionListener {
 
     private String[][] questions;
     private JFrame f;
+    private JLabel questionsMax;
+    private JLabel multipleChoices;
     private int amountQuestions;
     private int multipleChoice = 4;
 
@@ -38,8 +40,8 @@ public class WordLearner implements ActionListener {
         amountQuestions = questions.length;
         JPanel info = new JPanel(new GridLayout(3, 0));
         JLabel file = new JLabel("Filename: " + filename, SwingConstants.CENTER);
-        JLabel questionsMax = new JLabel("Questions: " + amountQuestions, SwingConstants.CENTER);
-        JLabel multipleChoices = new JLabel("Multiple Choices: " + 4, SwingConstants.CENTER);
+        questionsMax = new JLabel("Questions: " + amountQuestions, SwingConstants.CENTER);
+        multipleChoices = new JLabel("Multiple Choices: " + 4, SwingConstants.CENTER);
         info.add(file);
         info.add(questionsMax);
         info.add(multipleChoices);
@@ -95,23 +97,32 @@ public class WordLearner implements ActionListener {
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) < '0' || s.charAt(i) > '9') return false;
         }
-        return Integer.parseInt(s) <= amountQuestions;
+        return true;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        // If the Change Question button is pressed this gives an input dialog.
+        // The input will be checked, if its lower than 0, or higher than the maximum amount of questions, it will do nothing.
+        // Else it changes the JLabel of question amount to the new amount and stores this value in amountQuestions
         if (e.getActionCommand().equals("changeQ")) {
             String result = JOptionPane.showInputDialog(f, "Enter the amount of questions you want ["+questions.length+"]:", "Change Question Amount", JOptionPane.PLAIN_MESSAGE);
             if (result != null && isNumber(result)) {
+                if (Integer.parseInt(result) > amountQuestions || Integer.parseInt(result) < 0) return;
                 amountQuestions = Integer.parseInt(result);
-                ((JButton)e.getSource()).setText("Set Questions: " + amountQuestions);
+                questionsMax.setText("Set Questions: " + amountQuestions);
             }
         }
-        if (e.getActionCommand().equals("ChangeC")) {
+
+        // If the Change Multiple Choice Amount button is pressed this gives an input dialog.
+        // If the input is not a number or the number is not between 2 and 8, it will be ignored.
+        // Else the input will be set as the new multiple choice option amount.
+        if (e.getActionCommand().equals("changeC")) {
             String result = JOptionPane.showInputDialog(f, "Enter the amount of multiple choice questions you want [4]:", "Change Amount", JOptionPane.PLAIN_MESSAGE);
             if (result != null && isNumber(result)) {
+                if (Integer.parseInt(result) < 2 || Integer.parseInt(result) > 8) return;
                 multipleChoice = Integer.parseInt(result);
-                ((JButton)e.getSource()).setText("Set Multi Questions: " + multipleChoice);
+                multipleChoices.setText("Set Multi Questions: " + multipleChoice);
             }
         }
     }

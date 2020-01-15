@@ -1,28 +1,21 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
 
-public class WLFiles implements ActionListener {
-//    if (!Files.exists(Paths.get(filename))) {
-//        JOptionPane.showMessageDialog(f, "File not found!");
-//        System.exit(0);
-//    }
+public class WLFiles {
+    private String filename;
 
-    private static String filename;
-
-    public static String getFilename() {
+    public String getFilename() {
         return filename;
     }
 
-    static void chooseFile() {
-        filename = null;
-        JDialog dialog = new JDialog();
-        dialog.setTitle("Choose File");
-        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    public void chooseFile() {
+        JDialog d = new JDialog();
+        d.setTitle("Choose File");
+        d.setModal(true);
+        d.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 
         // Hiragana, Katakana or Custom
         JPanel panel = new JPanel(new GridLayout(3, 0));
@@ -32,14 +25,13 @@ public class WLFiles implements ActionListener {
 
         hiragana.addActionListener(e -> {
             filename = "files/hiragana.txt";
-            dialog.dispose();
+            d.dispose();
         });
         katakana.addActionListener(e -> {
             filename = "files/katakana.txt";
-            dialog.dispose();
+            d.dispose();
         });
         custom.addActionListener(e -> {
-            // Add Custom
             ArrayList<String> files = new ArrayList<>();
             try {
                 Files.list(new File("").toPath()).forEach(x -> {
@@ -51,21 +43,24 @@ public class WLFiles implements ActionListener {
             }
 
             if (files.size() != 0) {
-                JDialog dialog1 = new JDialog();
-                dialog1.setTitle("Choose Custom File");
+                JDialog d2 = new JDialog();
+                d2.setTitle("Choose Custom File");
+                d2.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                d2.setModal(true);
                 JPanel filesListing = new JPanel(new GridLayout(files.size(), 2));
                 for (String file : files) {
                     JButton button = new JButton(file);
-                    button.setSize(new Dimension(300, 40));
+                    button.setSize(new Dimension(150, 40));
                     button.addActionListener(e1 -> {
                         filename = e1.getActionCommand();
-                        dialog1.dispose();
+                        d.dispose();
+                        d2.dispose();
                     });
                     filesListing.add(button);
                 }
-                dialog1.add(filesListing);
-                dialog1.pack();
-                dialog1.setVisible(true);
+                d2.add(filesListing);
+                d2.pack();
+                d2.setVisible(true);
             } else {
                 JOptionPane.showMessageDialog(null, "No files found in " + System.getProperty("user.dir"));
             }
@@ -79,11 +74,11 @@ public class WLFiles implements ActionListener {
         }
 
         // Add Panels
-        dialog.add(panel);
+        d.add(panel);
 
         // Start
-        dialog.pack();
-        dialog.setVisible(true);
+        d.pack();
+        d.setVisible(true);
     }
 
     static String[][] readFile(String filename, String regex) {
@@ -95,27 +90,26 @@ public class WLFiles implements ActionListener {
             e.printStackTrace();
         }
         boolean correct = true;
-        int line = -1;
+        ArrayList<Integer> errorLines = new ArrayList<>();
         String[][] array = new String[lines.size()][2];
         for (int i = 0; i < lines.size(); i++) {
             String[] split = lines.get(i).split(regex);
             if (split.length != 2) {
                 correct = false;
-                line = i;
-                break;
+                errorLines.add(i);
+            } else {
+                array[i][0] = split[0];
+                array[i][1] = split[1];
             }
-            array[i][0] = split[0];
-            array[i][1] = split[1];
         }
         if (!correct) {
-            JOptionPane.showMessageDialog(null, filename + " contains an error on line " + line + "!");
-            System.exit(0);
+            if (errorLines.size() == lines.size()) {
+                JOptionPane.showMessageDialog(null, filename + " is unreadable!");
+                array = new String[0][0];
+            } else {
+                JOptionPane.showMessageDialog(null, filename + " contains errors on lines " + errorLines + "!");
+            }
         }
         return array;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
     }
 }

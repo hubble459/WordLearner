@@ -2,6 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 public class WordLearner implements ActionListener {
     public static void main(String[] args) {
@@ -147,12 +151,31 @@ public class WordLearner implements ActionListener {
 
         // Change Text File
         if (e.getActionCommand().equals("changeT")) {
-            chooseFile();
-            questions = WLFiles.readFile(filename, regex);
-            amountQuestions = questions.length;
-            file.setText("File: " + filename.replace("files/", ""));
-            questionsMax.setText("Questions: " + amountQuestions);
-            multipleChoices.setText("Choices: " + choices);
+            try {
+                final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+                final File currentJar;
+
+                currentJar = new File(WordLearner.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+
+                // is it a jar file?
+                if (!currentJar.getName().endsWith(".jar")) {
+                    JOptionPane.showMessageDialog(f, "You have to run it from a .jar file to be able to change the file");
+                    return;
+                }
+
+
+                // Build command: java -jar application.jar
+                final ArrayList<String> command = new ArrayList<>();
+                command.add(javaBin);
+                command.add("-jar");
+                command.add(currentJar.getPath());
+
+                final ProcessBuilder builder = new ProcessBuilder(command);
+                builder.start();
+                System.exit(0);
+            } catch (URISyntaxException | IOException ex) {
+                ex.printStackTrace();
+            }
         }
     }
 }

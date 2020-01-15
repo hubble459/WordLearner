@@ -2,6 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class WLOptions implements ActionListener {
     private String[][] questions = new String[0][0];
@@ -30,6 +32,12 @@ public class WLOptions implements ActionListener {
         d = new JDialog();
         d.setTitle("Settings");
         d.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        d.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.exit(0);
+            }
+        });
         d.setModal(true);
 
         // Menu Bar
@@ -38,9 +46,9 @@ public class WLOptions implements ActionListener {
         JMenuItem mi1 = new JMenuItem("Change Regex");
         mi1.addActionListener(this);
         mi1.setActionCommand("regex");
-        JMenuItem mi2 = new JMenuItem("Change FontSize");
+        JMenuItem mi2 = new JMenuItem("Close");
         mi2.addActionListener(this);
-        mi2.setActionCommand("fontSize");
+        mi2.setActionCommand("close");
         m.add(mi1);
         m.add(mi2);
         mb.add(m);
@@ -129,6 +137,11 @@ public class WLOptions implements ActionListener {
             if (result != null) {
                 regex = result;
             }
+        }
+
+        // Close
+        if (e.getActionCommand().equals("close")) {
+            System.exit(0);
         }
 
         // If the Change Question button is pressed this gives an input dialog.

@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class WLFiles {
@@ -82,6 +83,7 @@ public class WLFiles {
     }
 
     static String[][] readFile(String filename, String regex) {
+        if (!Files.exists(Paths.get(filename))) return null;
         ArrayList<String> lines = new ArrayList<>();
         try {
             BufferedReader reader = new BufferedReader(new FileReader(filename));
@@ -102,7 +104,10 @@ public class WLFiles {
                 array[i][1] = split[1];
             }
         }
-        if (!correct) {
+        if (array.length < 4) {
+            JOptionPane.showMessageDialog(null, filename + " has to have more than 4 lines!");
+            array = new String[0][0];
+        } else if (!correct) {
             if (errorLines.size() == lines.size()) {
                 JOptionPane.showMessageDialog(null, filename + " is unreadable!");
                 array = new String[0][0];
@@ -110,6 +115,7 @@ public class WLFiles {
                 JOptionPane.showMessageDialog(null, filename + " contains errors on lines " + errorLines + "!");
             }
         }
+
         return array;
     }
 }

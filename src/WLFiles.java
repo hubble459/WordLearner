@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -88,14 +89,9 @@ public class WLFiles {
         ArrayList<String> lines = new ArrayList<>();
         if (filename.contains("files/")) {
             InputStreamReader isr = new InputStreamReader(this.getClass().getResourceAsStream(filename));
-            System.out.println(isr.getEncoding());
+            System.out.println("[ENCODING] " + isr.getEncoding());
             if (!isr.getEncoding().equalsIgnoreCase("UTF8")) {
-                try {
-                    Runtime.getRuntime().exec(new String[]{"java", "-Dfile.encoding=utf-8", "-jar", "WordLearner V5.jar"});
-                    System.exit(0);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                resetWithUTF8();
             }
             BufferedReader reader = new BufferedReader(isr);
             reader.lines().forEach(lines::add);
@@ -134,5 +130,33 @@ public class WLFiles {
         }
 
         return array;
+    }
+
+    private void resetWithUTF8() {
+        try {
+            final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+            final File currentJar;
+
+            currentJar = new File(WordLearner.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+
+            // is it a jar file?
+            if (!currentJar.getName().endsWith(".jar")) {
+                JOptionPane.showMessageDialog(null, "You have to run it from a .jar file to be able to change the file");
+                return;
+            }
+
+            // Build command: java -Dfile.encoding=utf-8 -jar application.jar
+            final ArrayList<String> command = new ArrayList<>();
+            command.add(javaBin);
+            command.add("-Dfile.encoding=utf-8");
+            command.add("-jar");
+            command.add(currentJar.getPath());
+
+            final ProcessBuilder builder = new ProcessBuilder(command);
+            builder.start();
+            System.exit(0);
+        } catch (URISyntaxException | IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

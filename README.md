@@ -1,3 +1,3 @@
 # WordLearner
-WordLearner with a GUI writen in Java
+WordLearner with a GUI written in Java
 uwu

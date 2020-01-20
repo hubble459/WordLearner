@@ -7,25 +7,25 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class WLQuestion {
-    private int side1;
-    private int side2;
+    final private int side1;
+    final private int side2;
     private int choices = 4;
     private int answerInQuestions;
     private String question;
-    private String[][] questions;
-    private ArrayList<String> previous = new ArrayList<>();
+    final private String[][] questions;
+    final private ArrayList<String> previous = new ArrayList<>();
 
     public WLQuestion(String[][] questions) {
         getJSONFile();
         this.questions = questions;
-        side1 = (int)(Math.random()*2);
+        side1 = (int) (Math.random() * 2);
         side2 = side1 == 0 ? 1 : 0;
     }
 
     private int getRandom() {
         int random;
         do {
-            random = (int)(Math.random()*questions.length);
+            random = (int) (Math.random() * questions.length);
         } while (previous.contains(questions[random][0]));
         previous.add(questions[random][0]);
         return random;
@@ -59,14 +59,14 @@ public class WLQuestion {
                 boolean repeat;
                 do {
                     repeat = false;
-                    rand = (int) (Math.random()*questions.length);
+                    rand = (int) (Math.random() * questions.length);
                     for (Integer prev : tempArray) {
                         if (prev == rand) {
                             repeat = true;
                             break;
                         }
                     }
-                } while (repeat);
+                } while (repeat || questions[rand][side2].equals(questions[answerInQuestions][side2]));
                 answers[i] = questions[rand][side2];
                 tempArray.add(rand);
             }

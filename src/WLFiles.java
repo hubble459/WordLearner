@@ -82,15 +82,32 @@ public class WLFiles {
         d.setVisible(true);
     }
 
-    static String[][] readFile(String filename, String regex) {
-        if (!Files.exists(Paths.get(filename))) return null;
+    public String[][] readFile(String filename, String regex) {
+        if (!filename.contains("files/") && !Files.exists(Paths.get(filename))) return null;
+
         ArrayList<String> lines = new ArrayList<>();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(filename));
+        if (filename.contains("files/")) {
+            InputStreamReader isr = new InputStreamReader(this.getClass().getResourceAsStream(filename));
+            System.out.println(isr.getEncoding());
+            if (!isr.getEncoding().equalsIgnoreCase("UTF8")) {
+                try {
+                    Runtime.getRuntime().exec(new String[]{"java", "-Dfile.encoding=utf-8", "-jar", "WordLearner V5.jar"});
+                    System.exit(0);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            BufferedReader reader = new BufferedReader(isr);
             reader.lines().forEach(lines::add);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        } else {
+            try {
+                BufferedReader reader = new BufferedReader(new FileReader(filename));
+                reader.lines().forEach(lines::add);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
+
         boolean correct = true;
         ArrayList<Integer> errorLines = new ArrayList<>();
         String[][] array = new String[lines.size()][2];

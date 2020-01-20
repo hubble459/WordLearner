@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class WordLearner implements ActionListener {
-    private WLOptions wlOptions = new WLOptions();
+    final private WLOptions wlOptions = new WLOptions();
 
     public static void main(String[] args) {
         new WordLearner().run();
@@ -27,6 +27,17 @@ public class WordLearner implements ActionListener {
     private Robot robot;
 
     public void run() {
+        // Change the file encoding to UTF-8 (illegal reflective access operation)
+//        System.setProperty("file.encoding","UTF-8");
+//        try {
+//            Field charset = Charset.class.getDeclaredField("defaultCharset");
+//            charset.setAccessible(true);
+//            charset.set(null,null);
+//        } catch (NoSuchFieldException | IllegalAccessException e) {
+//            e.printStackTrace();
+//        }
+
+        // Choose File
         wlOptions.start();
         getAll();
         if (questions.length == 0) System.exit(0);
@@ -205,7 +216,7 @@ public class WordLearner implements ActionListener {
 
         // Close
         if (e.getActionCommand().equals("close")) {
-            System.exit(0);
+            scoreScreen();
         }
     }
 
@@ -213,7 +224,7 @@ public class WordLearner implements ActionListener {
         WLQuestion.deleteJSON();
         f.setVisible(false);
         int time = (int) ((System.currentTimeMillis() - startTime) / 1000);
-        WLScore wlScore = new WLScore(time, correct, amount, average);
+        WLScore wlScore = new WLScore(time, correct, counter, average);
         wlScore.showScore();
         if (WLScore.restart) reset();
         else System.exit(0);

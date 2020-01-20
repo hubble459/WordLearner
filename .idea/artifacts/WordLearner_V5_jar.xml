@@ -3,6 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/WordLearner_V5_jar</output-path>
     <root id="archive" name="WordLearner V5.jar">
       <element id="module-output" name="WordLearner V5" />
+      <element id="extracted-dir" path="$USER_HOME$/Downloads/json-20180813.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

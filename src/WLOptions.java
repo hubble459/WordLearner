@@ -171,7 +171,7 @@ public class WLOptions implements ActionListener {
         // Change Text File
         if (e.getActionCommand().equals("changeT")) {
             chooseFile();
-            questions = WLFiles.readFile(filename, regex);
+            questions = new WLFiles().readFile(filename, regex);
             if (questions != null && questions.length != 0) {
                 amountQuestions = questions.length;
                 file.setText("File: " + filename.replace("files/", ""));

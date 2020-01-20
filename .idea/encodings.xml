@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="Encoding">
-    <file url="file://$USER_HOME$/AppData/Local/Temp/Rar$DRa7904.13352/KANAROM.CNV" charset="x-JISAutoDetect" />
-    <file url="file://$USER_HOME$/AppData/Local/Temp/Rar$DRa7904.9258/KANAROM.CNV" charset="windows-1252" />
+  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/first names sorted.txt" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/last names sorted.txt" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/WordLearner.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/files/hiragana.txt" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/files/katakana.txt" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

@@ -2,10 +2,10 @@ import javax.swing.*;
 import java.awt.*;
 
 public class WLScore {
-    private int time;
-    private int correct;
-    private int amount;
-    private long average;
+    final private int time;
+    final private int correct;
+    final private int amount;
+    final private long average;
     public static boolean restart;
 
     public WLScore(int time, int correct, int amount, long average) {

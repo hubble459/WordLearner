@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="apk" name="WordLearner">
+    <output-path>$PROJECT_DIR$/out/artifacts/WordLearner</output-path>
+    <properties id="android-properties">
+      <options>
+        <option name="keyStoreUrl" value="file://" />
+        <option name="signingMode" value="DEBUG" />
+      </options>
+    </properties>
+    <root id="archive" name="WordLearner.apk" />
+  </artifact>
+</component>

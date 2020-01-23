@@ -16,11 +16,11 @@
 ご - GO
 さ - SA
 し - SHI
-す - TSU
+す - SU
 せ - SE
 そ - SO
 ざ - ZA
-じ - ZHI
+じ - JI
 ず - ZU
 ぜ - ZE
 ぞ - ZO
@@ -30,8 +30,8 @@
 て - TE
 と - TO
 だ - DA
-ぢ - DI
-づ - DU
+ぢ - JI
+づ - ZU
 で - DE
 ど - DO
 な - NA

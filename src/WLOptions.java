@@ -156,13 +156,13 @@ public class WLOptions implements ActionListener {
             }
         }
 
-        // If the Change Multiple Choice Amount button is pressed this gives an input dialog.
-        // If the input is not a number or the number is not between 2 and 8, it will be ignored.
-        // Else the input will be set as the new multiple choice option amount.
+        // If the Change Multiple Choice Amount button is pressed this gives a dialog with a dropdown menu.
+        // The chosen number will be set as the new multiple choice option amount.
         if (e.getActionCommand().equals("changeC")) {
-            String result = JOptionPane.showInputDialog(d, "Enter the amount of multiple choice questions you want [4]:", "Change Amount", JOptionPane.PLAIN_MESSAGE);
-            if (result != null && isNumber(result)) {
-                if (Integer.parseInt(result) < 2 || Integer.parseInt(result) > 8) return;
+            String[] options = {"2", "3", "4", "5", "6", "7", "8"};
+            String result = (String) JOptionPane.showInputDialog(d, "Set Choice Amount",
+                    "Multiple Choice", JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+            if (result != null) {
                 choices = Integer.parseInt(result);
                 multipleChoices.setText("Set Multi Questions: " + choices);
             }

@@ -44,11 +44,12 @@ public class WordLearner implements ActionListener {
 
         // Setup JFrame
         f = new JFrame("WordLearner");
-        f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        f.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         f.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
                 WLQuestion.deleteJSON();
+                scoreScreen();
             }
         });
 
@@ -182,36 +183,35 @@ public class WordLearner implements ActionListener {
             }
             lastTime = System.currentTimeMillis();
 
-            if (++counter == amount) scoreScreen();
-            else {
-                int nanoseconds = 500;
-                q.setFont(new Font(q.getFont().getName(), q.getFont().getStyle(), fontSize * 2));
-                if (((JButton) (e.getSource())).getText().equals(answer)) {
-                    q.setForeground(Color.GREEN);
-                    q.setText("Correct!");
-                    correct++;
-                } else {
-                    q.setForeground(Color.RED);
-                    nanoseconds = 1000;
-                    for (int j = 0; j < choices; j++) {
-                        JButton b = ((JButton) (answers.getComponent(j)));
-                        if (b.getText().equals(answer)) {
-                            b.setBackground(Color.GREEN);
-                        }
+
+            int nanoseconds = 500;
+            q.setFont(new Font(q.getFont().getName(), q.getFont().getStyle(), fontSize * 2));
+            if (((JButton) (e.getSource())).getText().equals(answer)) {
+                q.setForeground(Color.GREEN);
+                q.setText("Correct!");
+                correct++;
+            } else {
+                q.setForeground(Color.RED);
+                nanoseconds = 1000;
+                for (int j = 0; j < choices; j++) {
+                    JButton b = ((JButton) (answers.getComponent(j)));
+                    if (b.getText().equals(answer)) {
+                        b.setBackground(Color.GREEN);
                     }
-                    q.setText("Wrong!");
                 }
-                timer = new Timer(nanoseconds, e1 -> {
-                    q.setForeground(Color.BLACK);
-                    q.setFont(new Font(q.getFont().getName(), q.getFont().getStyle(), fontSize * 3));
-                    for (int j = 0; j < choices; j++) {
-                        answers.getComponent(j).setBackground(Color.PINK);
-                    }
-                    setQuestion();
-                    timer.stop();
-                });
-                timer.start();
+                q.setText("Wrong!");
             }
+            timer = new Timer(nanoseconds, e1 -> {
+                q.setForeground(Color.BLACK);
+                q.setFont(new Font(q.getFont().getName(), q.getFont().getStyle(), fontSize * 3));
+                for (int j = 0; j < choices; j++) {
+                    answers.getComponent(j).setBackground(Color.PINK);
+                }
+                setQuestion();
+                timer.stop();
+                if (++counter == amount) scoreScreen();
+            });
+            timer.start();
         }
 
         // Close
@@ -238,5 +238,8 @@ public class WordLearner implements ActionListener {
         correct = 0;
         lastTime = 0;
         average = 0;
+        wlOptions.start();
+        getAll();
+        if (questions.length == 0) System.exit(0);
     }
 }
